@@ -1,31 +1,22 @@
-"""contract.cairo test file."""
-import os
+import random
+from typing import Tuple
 
-import pytest
-from starkware.starknet.testing.starknet import Starknet
-
-# The path to the contract source code.
-CONTRACT_FILE = os.path.join("contracts", "contract.cairo")
+from starkware.crypto.signature.signature import pedersen_hash, private_to_stark_key, sign
 
 
-# The testing library uses python's asyncio. So the following
-# decorator and the ``async`` keyword are needed.
-@pytest.mark.asyncio
-async def test_increase_balance():
-    """Test increase_balance method."""
-    # Create a new Starknet class that simulates the StarkNet
-    # system.
-    starknet = await Starknet.empty()
+def generate_key_pair() -> Tuple[int, int]:
+    private_key = random.randrange(1 << 251)
+    public_key = private_to_stark_key(private_key)
+    return (private_key, public_key)
 
-    # Deploy the contract.
-    contract = await starknet.deploy(
-        source=CONTRACT_FILE,
-    )
 
-    # Invoke increase_balance() twice.
-    await contract.increase_balance(amount=10).invoke()
-    await contract.increase_balance(amount=20).invoke()
+def sign_voter_registration(
+    poll_id: int, voter_public_key: int, owner_private_key: int
+) -> Tuple[int, int]:
+    r, s = sign(msg_hash=pedersen_hash(poll_id, voter_public_key), priv_key=owner_private_key)
+    return (r, s)
 
-    # Check the result of get_balance().
-    execution_info = await contract.get_balance().call()
-    assert execution_info.result == (30,)
+
+def sign_vote(poll_id: int, vote: int, private_key: int) -> Tuple[int, int]:
+    r, s = sign(msg_hash=pedersen_hash(poll_id, vote), priv_key=private_key)
+    return (r, s)
