@@ -1,0 +1,60 @@
+[
+    {
+        "inputs": [
+            {
+                "name": "result_recorder_address",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
+        "outputs": [],
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "name": "poll_id",
+                "type": "felt"
+            },
+            {
+                "name": "public_key",
+                "type": "felt"
+            }
+        ],
+        "name": "init_poll",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "poll_id",
+                "type": "felt"
+            }
+        ],
+        "name": "get_voting_state",
+        "outputs": [
+            {
+                "name": "number_no_votes",
+                "type": "felt"
+            },
+            {
+                "name": "number_yes_votes",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "poll_id",
+                "type": "felt"
+            }
+        ],
+        "name": "finalize_poll",
+        "outputs": [],
+        "type": "function"
+    }
+]
